@@ -1,0 +1,11 @@
+ UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonTapGestureClick:)];
+    tapGesture.numberOfTapsRequired = 2;
+    tapGesture.numberOfTouchesRequired = 1;
+    [self.view addGestureRecognizer:tapGesture];
+    
+    
+    
+-(void)buttonTapGestureClick:(UITapGestureRecognizer *)sender
+{
+  // DO YOUR WORK HERE
+}
