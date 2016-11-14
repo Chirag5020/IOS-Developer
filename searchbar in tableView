@@ -1,0 +1,50 @@
+ aryAllData = [NSMutableArray new];
+    [aryAllData addObject:@"A"];
+    [aryAllData addObject:@"B"];
+    [aryAllData addObject:@"C"];
+    [aryAllData addObject:@"D"];
+    
+    aryTableData = [aryAllData mutableCopy];
+    
+#pragma mark - TableView Datasource
+ 
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return aryTableData.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tblData dequeueReusableCellWithIdentifier:@"cell"];
+    if ( cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        
+    }
+    
+    cell.textLabel.text = [aryTableData objectAtIndex:indexPath.row];
+    return  cell;
+    
+}
+
+
+#pragma mark - SearchBar Delegate
+
+-(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    NSLog(@"%@",searchText);
+    searchText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    if (searchText.length > 0)
+    {
+        NSPredicate *predict = [NSPredicate predicateWithFormat:@"self contains[cd] %@",searchText];
+        NSArray *arySearchData = [aryAllData filteredArrayUsingPredicate:predict];
+        aryTableData = [arySearchData mutableCopy];
+        [tblData reloadData];
+    }
+    else
+    {
+        aryTableData = [aryAllData mutableCopy];
+        [tblData reloadData];
+    }
+}
