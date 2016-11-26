@@ -1,0 +1,85 @@
+In .h file
+
+{
+    AVAudioPlayer *objPlayer;
+    MPMoviePlayerController *player;
+    
+}
+-(IBAction)btnAudio:(id)sender;
+-(IBAction)btnVideo:(id)sender;
+
+
+
+
+In .m File
+
+
+#pragma mark - Button Events
+-(IBAction)btnAudio:(id)sender
+{
+    NSError *err;
+    
+    NSString *strUrl = [NSString stringWithFormat:@"%@",[[NSBundle mainBundle] pathForResource:@"TestAudio" ofType:@"mp3"]];
+    
+    objPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:strUrl] error:&err];
+    [objPlayer prepareToPlay];
+    [objPlayer playAtTime: objPlayer.deviceCurrentTime];
+    [objPlayer play];
+    
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerMethod) userInfo:nil repeats:YES];
+    UISlider *objSlider;
+    objSlider.minimumValue = 0.0;
+    objSlider.maximumValue = objPlayer.duration;
+    
+}
+-(void)timerMethod
+{
+    NSLog(@"%f",objPlayer.currentTime);
+}
+-(IBAction)btnVideo:(id)sender
+{
+    NSString *strUrl = [NSString stringWithFormat:@"%@",[[NSBundle mainBundle] pathForResource:@"TestVideo" ofType:@"mp4"]];
+    NSURL *url = [NSURL fileURLWithPath:strUrl];
+   
+    player = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    player.controlStyle=MPMovieControlStyleDefault;
+    [player play];
+    player.shouldAutoplay = YES;
+    
+   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
+    [self.view addSubview:player.view];
+    
+  [player setFullscreen:YES animated:YES];    
+}
+-(void)doneButtonClick
+{
+    [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIInterfaceOrientationPortrait] forKey:@"orientation"];
+    [player setFullscreen:NO animated:YES];
+    [player stop];
+    [player.view removeFromSuperview];
+    
+}
+-(void)moviePlayBackDidFinish
+{
+    [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIInterfaceOrientationPortrait] forKey:@"orientation"];
+    [player setFullscreen:NO animated:YES];
+    [player stop];
+    // [theMoviPlayer autorelease];
+    [player.view removeFromSuperview];
+   
+    
+}
+- (void) moviePlayBackDidFinish:(NSNotification*)notification
+{
+  player = [notification object];
+    [[NSNotificationCenter defaultCenter]
+     removeObserver:self
+     name:MPMoviePlayerPlaybackDidFinishNotification
+     object:player];
+    
+    if ([player
+         respondsToSelector:@selector(setFullscreen:animated:)])
+    {
+        [player.view removeFromSuperview];
+    }
+}
