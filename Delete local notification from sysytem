@@ -1,0 +1,36 @@
+
+
+ UILocalNotification *localNotification=[[UILocalNotification alloc]init];
+    localNotification.fireDate=[NSDate dateWithTimeIntervalSinceNow:5];
+    localNotification.alertBody=@"Message Arrived";
+    localNotification.alertAction=@"Chirag";
+    localNotification.alertLaunchImage=@"profile.jpg";
+    localNotification.soundName=UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber +=1;
+    localNotification.timeZone=[NSTimeZone defaultTimeZone];
+    [[UIApplication sharedApplication]scheduleLocalNotification:localNotification];
+   
+    
+    NSLog(@"Before %@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
+    
+    //call Delete Notification Method
+    [self deleteNotification];
+    NSLog(@"After %@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
+
+
+
+-(void)deleteNotification
+{
+    NSArray *arrayOfLocalNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications] ;
+    
+    for (UILocalNotification *localNotification in arrayOfLocalNotifications) {
+        
+        if ([localNotification.alertBody isEqualToString:@"Message"]) {
+            NSLog(@"the notification this is canceld is %@", localNotification.alertBody);
+            
+            [[UIApplication sharedApplication] cancelLocalNotification:localNotification] ; // delete the notification from the system
+            
+        }
+        
+     }
+}
