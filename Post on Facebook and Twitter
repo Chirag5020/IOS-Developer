@@ -1,0 +1,31 @@
+
+#import <Social/Social.h>
+
+//Using button post on facebookk and Twitter
+
+
+
+-(IBAction)shareToFacebook:(id)sender
+{
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+        
+        SLComposeViewController *fbComposeViewcontroller = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+        
+        
+        [fbComposeViewcontroller setInitialText:@"test"];
+        [fbComposeViewcontroller addImage:[UIImage imageNamed:@""]];
+        [fbComposeViewcontroller addURL:[NSURL URLWithString:@""]];
+        
+        [self presentViewController:fbComposeViewcontroller animated:YES completion:nil];
+
+    }
+}
+
+-(IBAction)shareToTwitter:(id)sender
+{
+    SLComposeViewController *twitterComposeviewcontroller = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+    
+    [twitterComposeviewcontroller setInitialText:@""];
+    [twitterComposeviewcontroller addURL:[NSURL URLWithString:@""]];
+
+}
