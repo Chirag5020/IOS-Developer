@@ -1,0 +1,80 @@
+
+
+
+-(void)createMap
+{
+    NSArray *arrLatitude = [[NSArray alloc] initWithObjects:@"23.0217",@"72.5446",@"72.548",@"72.5447",@"33.724340", nil];
+    NSArray *arrLongitude = [[NSArray alloc] initWithObjects:@"72.5446",@"23.0218",@"23.0224",@"23.0218",@"-96.064453", nil];
+    for (int i=0; i<arrLatitude.count; i++)
+    {
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([[arrLatitude objectAtIndex:i] doubleValue], [[arrLongitude objectAtIndex:i] doubleValue]);
+        
+        MapPin *objPin = [[MapPin alloc] initWithCoordinate:coordinate title:@"test"];
+        NSLog(@"%@",objPin);
+        
+        [mapView addAnnotation:objPin];  
+    }
+
+    
+    MKCoordinateSpan span = MKCoordinateSpanMake(1.0f,10.0001f);
+    CLLocationCoordinate2D coordinate = {23.0217, 72.5446};
+    MKCoordinateRegion region = MKCoordinateRegionMake(currentLocationCoordinate, span);
+   
+    [mapView setRegion:region animated:YES];
+    
+}
+- (MKAnnotationView *)mapView:(MKMapView *)mapView1 viewForAnnotation:(id)annotation {
+    if([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    
+    static NSString *identifier = @"myAnnotation";
+   
+    MKPinAnnotationView * annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+
+    annotationView.pinColor = MKPinAnnotationColorPurple;
+    annotationView.animatesDrop = YES;
+    annotationView.canShowCallout = YES;
+    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    return annotationView;
+    
+}
+
+#pragma mark - Location Delegate
+-(void)getLocation
+{
+    locationManager = [[CLLocationManager alloc] init];
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined)
+    {
+       // [locationManager requestAlwaysAuthorization];
+       // [locationManager requestWhenInUseAuthorization];
+    }
+    else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied )
+    {
+        NSLog(@"Alert");
+        
+    }
+    locationManager.delegate  = self;
+    locationManager.desiredAccuracy  = kCLLocationAccuracyBest;
+    locationManager.distanceFilter = 1000;
+    [locationManager startUpdatingLocation];
+}
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"didFailWithError: %@", error);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    CLLocation *currentLocation = newLocation;
+    
+    if (CLLocationCoordinate2DIsValid(currentLocation.coordinate))
+    {
+        NSLog(@"didUpdateToLocation: %f %f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+      
+        currentLocationCoordinate = CLLocationCoordinate2DMake( newLocation.coordinate.latitude,  newLocation.coordinate.longitude);
+        [self createMap];
+        
+    }
+}
