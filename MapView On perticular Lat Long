@@ -1,0 +1,28 @@
+#import <MapKit/MapKit.h>
+
+
+MKMapView *myMap;
+CLLocationManager *locationManager;
+
+
+
+ locationManager = [[CLLocationManager alloc]init];
+    [locationManager setDelegate:self];
+    [locationManager startUpdatingLocation];
+    
+    
+    MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
+    annotation.title = @"sagar";
+    annotation.subtitle = @"First Sub Title";
+    annotation.coordinate = CLLocationCoordinate2DMake(37.332407,-122.030475);
+    [myMap addAnnotation:annotation];
+    
+    
+    - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation{
+    NSLog(@"%@",newLocation);
+}
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    NSLog(@"%@",[locations lastObject]);
+    CLLocation *currentLocation = [locations lastObject];
+    NSLog(@"Current Lat :%f Long :%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
+}
