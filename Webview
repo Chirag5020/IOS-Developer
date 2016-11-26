@@ -1,0 +1,23 @@
+
+//Must import delegate method
+
+ NSString *strURL = @"http://www.google.com/";
+    NSURL *url = [NSURL URLWithString:strURL];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+    
+    #pragma mark - WebView Method
+    
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+    return NO;
+}
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    NSLog(@"webViewDidStartLoad");
+}
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    NSLog(@"webViewDidFinishLoad");
+}
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    NSLog(@"didFailLoadWithError");
+}
